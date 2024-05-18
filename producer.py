@@ -3,6 +3,8 @@ import random
 from kafka import KafkaProducer
 import json
 
+from model import is_fraud
+
 fake = Faker()
 
 def generate_transaction():
@@ -23,9 +25,10 @@ topic = 'transactions'
 
 try:
     while True:
-        transaction = generate_transaction()
+        transactions = generate_transaction()
         # TODO: model training
-        producer.send(topic, value=transaction)
-        print("Sent:", transaction)
+        if is_fraud(transactions):
+            producer.send(topic, value=transactions)
+            print("Fraud detected and sent:", transactions)
 except KeyboardInterrupt:
     producer.close()
