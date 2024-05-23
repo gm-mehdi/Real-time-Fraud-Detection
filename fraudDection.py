@@ -1,3 +1,4 @@
+from pyspark import SparkContext
 from pyspark.sql import SparkSession
 from pyspark.ml import PipelineModel
 # from kafka import KafkaProducer, KafkaConsumer
@@ -6,7 +7,7 @@ from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.classification import DecisionTreeClassifier
 from pyspark.ml import Pipeline
 # import json
-
+sc = SparkContext();
 # Initialiser Spark
 spark = SparkSession.builder.appName("FraudDetection").getOrCreate()
 
@@ -39,9 +40,9 @@ pipeline = Pipeline(stages=[dt])
 model = pipeline.fit(trainingData)
 
 # Sauvegarder le modèle
-model.save("trained.csv")
+model.save("trained")
 
-model_trained = PipelineModel.load("trained.csv")
+model_trained = PipelineModel.load("trained")
 # # Kafka configuration
 # input_topic = 'transactions'
 # output_topic = 'fraud_transactions'
@@ -55,13 +56,16 @@ model_trained = PipelineModel.load("trained.csv")
 
 def is_fraud(transactions):
     # Convertir le dictionnaire en INT
-    transactions['isFlaggedFraud'] = int(transactions['isFlaggedFraud'])
     # Convertir le dictionnaire en DataFrame Spark
+    print(0)
     df = spark.createDataFrame([transactions])
+    print(1)
     # Prédire la fraude
     prediction = model.transform(df)
+    print(2)
     # Récupérer la prédiction
     is_fraudulent = prediction.collect()[0]['isFlaggedFraud'] == 1
+    print(3)
     return is_fraudulent
 
 # try:
