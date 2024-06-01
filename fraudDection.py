@@ -20,7 +20,7 @@ data = indexer.fit(data).transform(data)
 
 # Assembler les features
 assembler = VectorAssembler(
-    inputCols=["amount", "typeIndex"],  # Ajoutez d'autres colonnes de features si nécessaire
+    inputCols=["amount", "typeIndex"],
     outputCol="features"
 )
 
@@ -57,6 +57,8 @@ model_trained = PipelineModel.load("trained")
 def is_fraud(transactions):
     # Convertir le dictionnaire en INT
     # Convertir le dictionnaire en DataFrame Spark
+    print('start')
+    transactions['isFlaggedFraud'] = int(transactions['isFlaggedFraud'])
     print(0)
     df = spark.createDataFrame([transactions])
     print(1)
