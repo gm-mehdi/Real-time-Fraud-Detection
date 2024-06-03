@@ -6,7 +6,6 @@ import json
 import fraudDection
 
 
-
 fake = Faker()
 
 def generate_transaction():
