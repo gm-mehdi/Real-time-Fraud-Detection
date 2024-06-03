@@ -22,7 +22,7 @@ pipeline = Pipeline(stages=[indexer, assembler, dt])
 model = pipeline.fit(data)
 
 # Save the trained pipeline
-model.save("trained_pipeline")
+model.write().overwrite().save("trained_pipeline")
 
 # Load the trained pipeline
 model_trained = PipelineModel.load("trained_pipeline")
